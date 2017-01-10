@@ -34,8 +34,8 @@ stop:
 rm:
 	docker rm $(NAME)-$(INSTANCE)
 
-make-rootfs:
-	docker run --rm -ti --privileged -v $(CURDIR):/opt/build kjbreil/arch-build:$(VERSION)
+rootfs:
+	docker run --rm -ti --privileged -v $(CURDIR):/opt/build kjbreil/arch-build:2017.01.09
 
 default: image
 
@@ -44,5 +44,4 @@ release: image push push_latest
 inside:
 	mkdir -p $(ROOTFS)
 	pacstrap -c -d -G $(ROOTFS) $(PKGS)
-	rm -f root.tar.xz root.tar
-	tar --numeric-owner --xattrs --acls -C "$(ROOTFS)" -c . | xz -f -vvv -9 -e --lzma2=dict=128MiB > root.tar.xz
+	tar --numeric-owner --xattrs --acls -C "$(ROOTFS)" -c . | xz -f > root.tar.xz
