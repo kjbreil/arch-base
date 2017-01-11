@@ -11,13 +11,10 @@ ROOTFS=/arch-root
 .PHONY: image push push_latest shell run start stop rm release
 
 image:
-	docker build --no-cache -t $(NS)/$(REPO):$(VERSION) .
+	docker build --no-cache -t $(NS)/$(REPO) -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
 
 push:
-	docker push $(NS)/$(REPO):$(VERSION)
-
-push_latest:
-	docker push $(NS)/$(REPO):latest
+	docker push $(NS)/$(REPO)
 
 shell:
 	docker run --rm --name $(NAME)-$(INSTANCE) -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(REPO):$(VERSION) /bin/bash
@@ -35,7 +32,7 @@ rm:
 	docker rm $(NAME)-$(INSTANCE)
 
 rootfs:
-	docker run --rm -ti --privileged -v $(CURDIR):/opt/build kjbreil/arch-build:2017.01.09
+	docker run --rm -ti --privileged -v $(CURDIR):/opt/build kjbreil/arch-build
 
 default: image
 
