@@ -42,4 +42,4 @@ release: image push push_latest
 inside:
 	mkdir -p $(ROOTFS)
 	pacstrap -c -d -G $(ROOTFS) $(PKGS)
-	tar --numeric-owner --xattrs --acls -C "$(ROOTFS)" -c . | xz -f > root.tar.xz
+	tar --numeric-owner --xattrs --acls -C "$(ROOTFS)" -c . | xz -f -3 > root.tar.xz
