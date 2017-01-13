@@ -14,6 +14,7 @@ image:
 	docker build --no-cache -t $(NS)/$(REPO) -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
 
 push:
+	docker push $(NS)/$(REPO):$(VERSION)
 	docker push $(NS)/$(REPO)
 
 shell:
