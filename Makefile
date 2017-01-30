@@ -4,21 +4,32 @@ VERSION ?= $(shell date +'%Y.%m.%d')
 REPO = arch-base
 NAME = arch-base
 INSTANCE = default
+VOLUMES = -v $(CURDIR):/opt/build
 
 PKGS=pacman
 ROOTFS=/arch-root
 
+
 .PHONY: image push push_latest shell run start stop rm release
 
 image:
-	docker build --no-cache -t $(NS)/$(REPO) -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
+	docker build -t $(NS)/$(REPO) -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
 
 push:
 	docker push $(NS)/$(REPO):$(VERSION)
 	docker push $(NS)/$(REPO)
 
+heim:
+	docker tag $(NS)/$(REPO):$(VERSION) heimdall.norgenet.net:5000/$(REPO):$(VERSION)
+	docker tag $(NS)/$(REPO):$(VERSION) heimdall.norgenet.net:5000/$(REPO)
+	docker push heimdall.norgenet.net:5000/$(REPO):$(VERSION)
+	docker push heimdall.norgenet.net:5000/$(REPO)
+
 shell:
-	docker run --rm --name $(NAME)-$(INSTANCE) -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(REPO):$(VERSION) /bin/bash
+	docker run --rm --name $(NAME)-$(INSTANCE) -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(REPO) /bin/bash
+
+bshell:
+	docker run --rm --name $(NAME)-$(INSTANCE) --privileged -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/arch-build /bin/bash
 
 run:
 	docker run --rm --name $(NAME)-$(INSTANCE) $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(REPO):$(VERSION)
