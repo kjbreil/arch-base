@@ -12,7 +12,7 @@ ROOTFS=/arch-root
 
 .PHONY: image push push_latest shell run start stop rm release
 
-default: no-cache
+default: rootfs no-cache rootfs no-cache release
 
 image:
 	docker build -t $(NS)/$(REPO) -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
@@ -23,12 +23,6 @@ no-cache:
 push:
 	docker push $(NS)/$(REPO):$(VERSION)
 	docker push $(NS)/$(REPO)
-
-heim:
-	docker tag $(NS)/$(REPO):$(VERSION) heimdall.norgenet.net:5000/$(REPO):$(VERSION)
-	docker tag $(NS)/$(REPO):$(VERSION) heimdall.norgenet.net:5000/$(REPO)
-	docker push heimdall.norgenet.net:5000/$(REPO):$(VERSION)
-	docker push heimdall.norgenet.net:5000/$(REPO)
 
 shell:
 	docker run --rm --name $(NAME)-$(INSTANCE) -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(REPO) /bin/bash
@@ -51,7 +45,7 @@ rm:
 rootfs:
 	docker run --rm -ti --privileged -v $(CURDIR):/opt/build kjbreil/arch-build
 
-release: image push push_latest
+release: image push
 
 inside:
 	mkdir -p $(ROOTFS)
