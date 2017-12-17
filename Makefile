@@ -12,13 +12,13 @@ ROOTFS=/arch-root
 
 .PHONY: image push push_latest shell run start stop rm release
 
-default: rootfs no-cache rootfs no-cache release
+default: rootfs no-cache release
 
 image:
-	docker build -t $(NS)/$(REPO) -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
+	docker build -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
 
 no-cache:
-	docker build --no-cache -t $(NS)/$(REPO) -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
+	docker build --no-cache -t $(NS)/$(REPO) -t $(NS)/$(REPO):$(VERSION) .
 
 push:
 	docker push $(NS)/$(REPO):$(VERSION)
